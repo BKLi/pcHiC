@@ -1,6 +1,5 @@
 # pcHi-C
 
-@Bingkun Li
 
 ## Scripts used in reproducibility analysis & Enrichment analysis
 
