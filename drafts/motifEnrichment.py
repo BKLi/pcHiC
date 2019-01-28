@@ -1,15 +1,16 @@
+""" ATAC-Seq peaks motif enrichment analysis"""
+
 import pandas as pd
 import os
 import glob
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-''' ATAC-Seq peaks motif enrichment analysis'''
 
 # read in all results files in folder
 # def motif_enrichment(known_results_folder):
 
-known_results_folder = "C:\\Users\\libin\\UCSF\\motif_analysis\\200_human"
+known_results_folder = "C:\\Users\\libin\\UCSF\\motif_analysis\\200_HOCOMOCO_Dec.11\\set1"
 size = 200
 
 list_of_result = glob.glob(known_results_folder + "\\*.txt")
@@ -17,17 +18,17 @@ cell_types = [os.path.split(path)[-1][13:-4] for path in list_of_result]
 # 1e-749 will be read in as 0 if not read in as str
 results = [pd.read_table(result, sep="\t", dtype=str) for result in list_of_result]
 
-#data cleaning; rename motif name
-## for hocomoco dataset
+# data cleaning; rename motif name
+# for hocomoco dataset
 for res in results:
     res["Motif Name"] = res["Motif Name"].str.extract(r"([A-Za-z0-9]+)_.+", expand=False)
-## for combined hocomoco
+# for combined hocomoco
 results_cleaned = [result.filter(["Motif Name", "Log P-value"], axis=1).drop_duplicates(subset="Motif Name") for result in results]
 # results_cleaned = [result.filter(["Motif Name", "Log P-value"], axis=1) for result in results]
 # extract top motifs
-sig_results_cleaned = [result.iloc[0:101,:] for result in results_cleaned]
+sig_results_cleaned = [result.iloc[0:51,:] for result in results_cleaned]
 for (c, r) in zip(cell_types, sig_results_cleaned):
-    ## for homer dataset
+    # for homer dataset
     # r["Motif Name"] = r["Motif Name"].str.extract(r"^([^\/]+)", expand=False)
     r.rename(columns={"Log P-value": c}, inplace=True)
     r.to_csv(known_results_folder + "\\" + c + str(size) + ".csv", sep=",", index=False)
@@ -82,10 +83,10 @@ for item in ax.get_xticklabels():
 
 # plt.figure(figsize=(5,7))
 cluster_row = sns.clustermap(common_motif, cmap = "RdBu", standard_scale=0, figsize=(11,15)) 
-plt.title("Row-Normalized cluster", y =1.2, x=1.1, fontsize =13) 
+plt.title("Row-Normalized cluster", y=1.2, x=1.1, fontsize=13)
 
 cluster_column = sns.clustermap(common_motif, standard_scale=1, figsize=(11,15))
-plt.title("Col-Normalized cluster", y =1.2, x=1.1, fontsize =13)
+plt.title("Col-Normalized cluster", y=1.2, x=1.1, fontsize=13)
 
 
 # motif_enrichment("C:\\Users\libin\Desktop\motif_analysis")
