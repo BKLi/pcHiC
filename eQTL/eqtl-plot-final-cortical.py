@@ -54,6 +54,6 @@ sns.boxplot(x="variable",y="value",data=cortical_final_plot_fout.melt(),
             showfliers=False, showbox=False, zorder=1,
             boxprops = {'color': 'black', 'linestyle': '-'},
             capprops = {'color': 'grey', 'linestyle': '-'},
-            medianprops = {'color': 'grey', 'linestyle': '--'},
+            medianprops = {'color': 'grey', 'linestyle': '-'},
             width=0.35, whiskerprops = dict(linestyle='-', linewidth=3, color="grey"))
 plt.savefig('C://Users//libin//UCSF/eQTL/cortical_final_3X_scontrol_fout_cut_violin.pdf', transparent=True)
