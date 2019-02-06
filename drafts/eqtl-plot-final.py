@@ -36,9 +36,9 @@ motor_final_plot["blood"] = motor_intersect_sig_blood["score"]
 motor_final_plot = motor_final_plot[["motor","random","liver", "blood"]]
 
 plt.figure()
-sns.boxplot(x="variable",y="value",data=motor_final_plot.melt(), palette="Pastel2").set(ylim=(3,20))
+sns.boxplot(x="variable",y="value",data=motor_final_plot.melt(), palette="Pastel1").set(ylim=(3,20))
 plt.savefig('C://Users//libin//UCSF/eQTL/motor_final_1x.pdf', transparent=True)
 
 plt.figure()
-sns.boxplot(x="variable",y="value",data=motor_final_plot.melt(), palette="Pastel2", showfliers=False).set(ylim=(3,20))
+sns.boxplot(x="variable",y="value",data=motor_final_plot.melt(), palette="Pastel1", showfliers=False).set(ylim=(3,20))
 plt.savefig('C://Users//libin//UCSF/eQTL/motor_final_1x_Foutlier.pdf', transparent=True)
