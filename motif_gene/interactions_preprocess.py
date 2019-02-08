@@ -66,7 +66,7 @@ ctype_interactions_ann_rpromotor_ldpeaks_full.columns.drop("distal_ATAC.seq_lhs_
 .loc[:, ctype_interactions_ann_rpromotor_ldpeaks_full.columns]
 )
 
-# discard unimportant columns
+# remove unimportant columns
 ctype_interactions_ann_lpromotor_rdpeaks_full_split = \
 (ctype_interactions_ann_lpromotor_rdpeaks_full_split[[
  'interaction_ID',
@@ -116,7 +116,7 @@ ctype_interactions_ann_promotor_dpeaks_full_split_dedup_collapse = \
 # (cortical_interactions_ann_lpromotor_rdpeaks_full_split_dedup_merge["promoter_lhs_ids"]
 # + "," + cortical_interactions_ann_lpromotor_rdpeaks_full_split_dedup_merge["promoter_other_lhs_ids"])
 
-# discard unimportant coulmns & rename column for merging peak file
+# discard unimportant columns & rename column for merging peak file
 ctype_interactions_ann_promotor_dpeaks_full_split_dedup_collapse = \
 (ctype_interactions_ann_promotor_dpeaks_full_split_dedup_collapse[
 ['distal_ATAC.seq_ids',
@@ -128,7 +128,7 @@ ctype_pro_peak_final_df = pd.merge(
         ctype_interactions_ann_promotor_dpeaks_full_split_dedup_collapse,
         ctype_peaks, on=["atac_seq_peak_ID"], how="inner")
 
-# add seqname column to merge with FIMO putput later
+# add seqname column for merging with FIMO output later
 ctype_pro_peak_final_df['sequence_name'] = \
 (ctype_pro_peak_final_df["chrom"].map(str) +
  ":" +
@@ -172,8 +172,12 @@ data_range = np.arange(promoter_dict_df["atac_seq_peak_occurence"].min(),
 sns.distplot(promoter_dict_df["atac_seq_peak_occurence"],
              bins= data_range, color="blue",
              kde=False, hist_kws={'edgecolor':'black'}).set_xticks(data_range - 0.5)
-#cortical_interactions_ann_promoter = cortical_interactions_ann.loc[(cortical_interactions_ann["promoter_lhs"] >0) | (cortical_interactions_ann["promoter_other_lhs"] >0)\
-#                                                                 | (cortical_interactions_ann['promoter_rhs'] >0) | (cortical_interactions_ann['promoter_other_rhs']>0)]
+
+# deprecated code below
+# -------------------------------
+#cortical_interactions_ann_promoter = \
+# cortical_interactions_ann.loc[(cortical_interactions_ann["promoter_lhs"] >0) | (cortical_interactions_ann["promoter_other_lhs"] >0)\
+#                               | (cortical_interactions_ann['promoter_rhs'] >0) | (cortical_interactions_ann['promoter_other_rhs']>0)]
 #cortical_interactions_ann_promoter_bothhand = cortical_interactions_ann_promoter.loc[((cortical_interactions_ann_promoter["promoter_lhs"] >0) | (cortical_interactions_ann_promoter["promoter_other_lhs"] >0))\
 #                                                                                   & ((cortical_interactions_ann_promoter['promoter_rhs'] >0) | (cortical_interactions_ann_promoter['promoter_other_rhs'] >0))]
 
