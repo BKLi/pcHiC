@@ -5,6 +5,7 @@ Created on Wed Feb  6 15:45:22 2019
 @author: bingkun
 """
 import pandas as pd
+import seaborn as sns
 
 
 cell_type = "cortical"
@@ -68,3 +69,6 @@ for name, group in interaction_motif_merged_split_cut_grouped:
     motif_dict[name] = len(group_split["promoter_ids"].value_counts())
     # print(len(group_split["promoter_ids"].value_counts()))
     # print(group_split["promoter_ids"].shape[0])
+motif_dict_df = (pd.DataFrame.from_dict(motif_dict, orient="index").reset_index()
+                .rename(columns={"index":"motif_id", 0:"promoter_occurence"}))
+sns.distplot(motif_dict_df["promoter_occurence"],color="orange", kde=False)
