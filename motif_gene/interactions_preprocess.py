@@ -111,11 +111,6 @@ ctype_interactions_ann_promotor_dpeaks_full_split_dedup_collapse = \
  .groupby('distal_ATAC.seq_ids', as_index=False)
  .agg(",".join))
 
-# to simplify the model, combining lhs/lhs_otherend promoters
-# cortical_interactions_ann_lpromotor_rdpeaks_full_split_dedup_merge["promoter_all_lhs_ids"] = \
-# (cortical_interactions_ann_lpromotor_rdpeaks_full_split_dedup_merge["promoter_lhs_ids"]
-# + "," + cortical_interactions_ann_lpromotor_rdpeaks_full_split_dedup_merge["promoter_other_lhs_ids"])
-
 # discard unimportant columns & rename column for merging peak file
 ctype_interactions_ann_promotor_dpeaks_full_split_dedup_collapse = \
 (ctype_interactions_ann_promotor_dpeaks_full_split_dedup_collapse[
@@ -161,17 +156,29 @@ ctype_interactions_ann_promotor_dpeaks_full_split_dedup.columns.drop("promoter_i
 ctype_interactions_ann_promotor_dpeaks_full_dedup_doub_split_grouped = \
 (ctype_interactions_ann_promotor_dpeaks_full_dedup_doub_split
 .groupby('promoter_ids', as_index=False))
+
 promoter_dict = {}
 for name, group in ctype_interactions_ann_promotor_dpeaks_full_dedup_doub_split_grouped:
     promoter_dict[name] = len(group["distal_ATAC.seq_ids"].value_counts())
 promoter_dict_df = pd.DataFrame.from_dict(promoter_dict, orient='index').reset_index()
 promoter_dict_df = promoter_dict_df.rename(columns={"index":"promoter_id", 0:"atac_seq_peak_occurence"})
 
+# https://stackoverflow.com/questions/27083051/matplotlib-xticks-not-lining-up-with-histogram
 data_range = np.arange(promoter_dict_df["atac_seq_peak_occurence"].min(), 
                        promoter_dict_df["atac_seq_peak_occurence"].max(),1) - 0.5
+                       
+plt.figure()
 sns.distplot(promoter_dict_df["atac_seq_peak_occurence"],
              bins= data_range, color="blue",
              kde=False, hist_kws={'edgecolor':'black'}).set_xticks(data_range - 0.5)
+plt.title('{}'.format(cell_type))
+
+print(cell_type)
+print(promoter_dict_df["atac_seq_peak_occurence"].describe())
+
+# collapse on promoter for cross_ctype comparison later
+
+
 
 # deprecated code below
 # -------------------------------
@@ -186,3 +193,8 @@ sns.distplot(promoter_dict_df["atac_seq_peak_occurence"],
 #                                                                                 & (cortical_interactions_ann_promoter["distal_ATAC.seq_rhs"]>0))\
 #                                                                                 |(((cortical_interactions_ann_promoter['promoter_rhs'] >0) | (cortical_interactions_ann_promoter['promoter_other_rhs'] >0))\
 #                                                                                 & (cortical_interactions_ann_promoter["distal_ATAC.seq_lhs"]>0))]
+
+# to simplify the model, combining lhs/lhs_otherend promoters
+# cortical_interactions_ann_lpromotor_rdpeaks_full_split_dedup_merge["promoter_all_lhs_ids"] = \
+# (cortical_interactions_ann_lpromotor_rdpeaks_full_split_dedup_merge["promoter_lhs_ids"]
+# + "," + cortical_interactions_ann_lpromotor_rdpeaks_full_split_dedup_merge["promoter_other_lhs_ids"])
