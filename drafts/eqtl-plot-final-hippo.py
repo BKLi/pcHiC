@@ -9,22 +9,23 @@ import pandas as pd
 import seaborn as sns
 import matplotlib
 import matplotlib.pyplot as plt
+from scipy import stats
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['ps.fonttype'] = 42
 sns.set_style("white")
 
 
-hippocampus_all_sig_interactions = pd.read_table("C:\\Users\\libin\\UCSF\\eQTL\\hippocampus_lh_interactions",sep="\t",names=["chr","start","end","score","interactions_ID"])
-hippo_sig_intersect_hippo_sig_ID = pd.read_table("C:\\Users\\libin\\UCSF\\eQTL\\hippocampus_intersect_self_sig_merged.ID", sep="\t", names=["interactions_ID"])
+hippocampus_all_sig_interactions = pd.read_table(r"C:\Users\libin\UCSF\eQTL\pcHiC\hippocampus_lh_interactions",sep="\t",names=["chr","start","end","score","interactions_ID"])
+hippo_sig_intersect_hippo_sig_ID = pd.read_table(r'C:\Users\libin\UCSF\eQTL\pcHiC\hippocampus_intersect_self_sig_merged.ID', sep="\t", names=["interactions_ID"])
 hippo_sig_intersect_hippo_sig = pd.merge(hippocampus_all_sig_interactions, hippo_sig_intersect_hippo_sig_ID, on=["interactions_ID"], how="inner")
-hippo_sig_intersect_hippo_rand_ID = pd.read_table("C:\\Users\\libin\\UCSF\\eQTL\\Brain_Hippocampus.allpairs.tss_filt.3xgene.3x.sampled_merged.ID", names=["interactions_ID"])
+hippo_sig_intersect_hippo_rand_ID = pd.read_table(r'C:\Users\libin\UCSF\eQTL\pcHiC\Brain_Hippocampus.allpairs.tss_filt.3xgene.3x.sampled_merged.ID', names=["interactions_ID"])
 hippo_sig_intersect_hippo_rand = pd.merge(hippocampus_all_sig_interactions, hippo_sig_intersect_hippo_rand_ID, on=["interactions_ID"], how="inner")
 # hippo_sig_intersect_hippo_nonsig_ID = pd.read_table("C:\\Users\\libin\\UCSF\\eQTL\\hippo_intersect_egenes_nonsig_merged.ID",names=["interactions_ID"])
 # hippo_sig_intersect_hippo_nonsig = pd.merge(hippocampus_all_sig_interactions, hippo_sig_intersect_hippo_nonsig_ID, on=["interactions_ID"], how="inner")
-hippo_sig_intersect_liver_sig_ID = pd.read_table("C:\\Users\\libin\\UCSF\\eQTL\\hippo_intersect_Liver.signif_merged.ID", names=["interactions_ID"])
-hippo_sig_intersect_liver_sig = pd.merge(hippo_sig_intersect_liver_sig_ID, hippocampus_all_sig_interactions, on=["interactions_ID"], how="inner")
-hippo_sig_intersect_blood_sig_ID = pd.read_table("C:\\Users\\libin\\UCSF\\eQTL\\hippo_sig_intersect_sig_blood_merged.ID", names=["interactions_ID"])
-hippo_sig_intersect_blood_sig = pd.merge(hippo_sig_intersect_blood_sig_ID, hippocampus_all_sig_interactions, on=["interactions_ID"], how="inner")
+# hippo_sig_intersect_liver_sig_ID = pd.read_table("C:\\Users\\libin\\UCSF\\eQTL\\hippo_intersect_Liver.signif_merged.ID", names=["interactions_ID"])
+# hippo_sig_intersect_liver_sig = pd.merge(hippo_sig_intersect_liver_sig_ID, hippocampus_all_sig_interactions, on=["interactions_ID"], how="inner")
+# hippo_sig_intersect_blood_sig_ID = pd.read_table("C:\\Users\\libin\\UCSF\\eQTL\\hippo_sig_intersect_sig_blood_merged.ID", names=["interactions_ID"])
+# hippo_sig_intersect_blood_sig = pd.merge(hippo_sig_intersect_blood_sig_ID, hippocampus_all_sig_interactions, on=["interactions_ID"], how="inner")
 
 
 '''hippocampus_all_interactions = pd.read_table("C:\\Users\\libin\\UCSF\\eQTL\\hippocampus_full_lh_interactions",sep="\t",names=["chr","start","end","score","interactions_ID"])
@@ -59,6 +60,9 @@ hippo_final_plot["hippocampus"] = hippo_sig_intersect_hippo_sig["score"]
 # hippo_final_plot["liver"] = hippo_sig_intersect_liver_sig["score"]
 # hippo_final_plot["blood"] = hippo_sig_intersect_blood_sig["score"]
 hippo_final_plot = hippo_final_plot[["hippocampus","random"]]
+print (stats.ks_2samp(hippo_sig_intersect_hippo_rand["score"],hippo_sig_intersect_hippo_sig["score"]))
+
+
 
 hippo_final_plot_fout = pd.DataFrame()
 hippo_final_plot_fout["random"] = hippo_sig_intersect_hippo_rand_fout["score"]
@@ -67,6 +71,9 @@ hippo_final_plot_fout["hippocampus"] = hippo_sig_intersect_hippo_sig_fout["score
 # hippo_final_plot["liver"] = hippo_sig_intersect_liver_sig["score"]
 # hippo_final_plot["blood"] = hippo_sig_intersect_blood_sig["score"]
 hippo_final_plot_fout = hippo_final_plot_fout[["hippocampus","random"]]
+
+hippo_final_plot.to_csv(r"C:\Users\libin\UCSF\eQTL\pcHiC\hippo_final_plot", sep="\t", header=True, index=False)
+hippo_final_plot_fout.to_csv(r"C:\Users\libin\UCSF\eQTL\pcHiC\hippo_final_plot_fout", sep="\t", header=True, index=False)
 
 
 '''plt.figure()
@@ -129,19 +136,25 @@ sns.boxplot(x="variable",y="value",data=hippo_final_plot.melt(), palette="Pastel
             whiskerprops = dict(linestyle='-', linewidth=3, color="grey")).set(ylim=(4,20))'''
 
 
-plt.figure()
-ax = sns.boxplot(x="variable",y="value",data=hippo_final_plot.melt(), 
+'''plt.figure()
+
+
+sns.violinplot(x="variable",y="value",data=hippo_final_plot_fout.melt(), palette=["#eb8b5e","#f7d0be"], cut=0).set(ylim=(2,20))
+sns.boxplot(x="variable",y="value",data=hippo_final_plot.melt(), 
             showfliers=False, showbox=True,
             boxprops = {'color': 'black', 'linestyle': '-'},
             capprops = {'color': 'grey', 'linestyle': '-'},
             medianprops = {'color': 'grey', 'linestyle': '--'},
             width=0.1, whiskerprops = dict(linestyle='-', linewidth=3, color="grey"))
-plt.setp(ax.lines, zorder=100)
-plt.setp(ax.collections, zorder=100, label="")
-sns.violinplot(x="variable",y="value",data=hippo_final_plot_fout.melt(), palette=["#eb8b5e","#f7d0be"], cut=0).set(ylim=(2,20))
+plt.savefig('C://Users//libin//UCSF/eQTL/hippo_final_1x_egenes_cut_scontrol_fout_cut_violin.pdf', transparent=True)
+'''
 
 
-plt.savefig('C://Users//libin//UCSF/eQTL/hippo_final_3x_cut_scontrol_fout_cut_violin.pdf', transparent=True)
+# fig, (ax1, ax2) = plt.subplots(nrows=2)
+# a1.boxplot(..., ax=ax1)
+
+
+
 
 
 # plt.figure()

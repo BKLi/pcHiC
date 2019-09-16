@@ -17,8 +17,8 @@ def interaction_preprocess(interaction_file, cell_type):
     interacion_ID = [cell_type+str(i+1) for i in range(interaction.shape[0])]
     interaction["ID"] = interacion_ID
     
-    lhs_interaction = interaction[["chr1", "start1", "end1", "ID", "fdr", "ClusterNegLog10P"]]
-    rhs_interaction = interaction[["chr2", "start2", "end2", "ID", "fdr", "ClusterNegLog10P"]]
+    lhs_interaction = interaction[["chr1", "start1", "end1", "ID", "fdr", "ClusterNegLog10P", "count", "expected"]]
+    rhs_interaction = interaction[["chr2", "start2", "end2", "ID", "fdr", "ClusterNegLog10P", "count", "expected"]]
 
     outfile_lhs = "{}_lh_interactions".format(cell_type)
     outfile_rhs = "{}_rh_interactions".format(cell_type) 
