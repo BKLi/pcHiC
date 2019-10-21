@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.5
+#!/usr/bin/env python3.7
 
 """Take output matrices from HiC-Pro and convert them into HiCRep input format."""
 
