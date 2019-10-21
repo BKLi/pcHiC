@@ -36,7 +36,6 @@ import argparse
     This script is for generating chromosome-wide matrix only.
 """
 
-start = time.clock()
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-bed", "--inputBed", type=str, help="Filename of binned bed file from HiC-Pro output", required=True)
@@ -101,8 +100,6 @@ def integrate_matrix():
         for lst, line in zip(matrix_listed,bed_file_lst):
             outfile3.write("\t".join(line.strip().split()[0:3]) + "\t" + "\t".join(str(i) for i in lst) + "\n")
 
-    end = time.clock()
-    print("program finished running in: ", end - start)
 
 
 if __name__ == "__main__":
